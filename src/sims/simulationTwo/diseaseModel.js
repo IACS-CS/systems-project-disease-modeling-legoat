@@ -25,19 +25,19 @@ import { shufflePopulation } from "../../lib/shufflePopulation";
 */
 
 /**
- * Authors: 
+ * Authors: ryan dean
  * 
- * What we are simulating:
+ * What we are simulating: ebola 
  * 
- * What we are attempting to model from the real world:
+ * What we are attempting to model from the real world: the infection rate and death rate of ebola 
  * 
- * What we are leaving out of our model:
+ * What we are leaving out of our model: things like geography and real world factors like quarantine.
  * 
- * What elements we have to add:
+ * What elements we have to add: incubation rate of 9 days (average of 2-21 days) the recovery rate of 50% and the death rate of 50%
  * 
- * What parameters we will allow users to "tweak" to adjust the model:
+ * What parameters we will allow users to "tweak" to adjust the model: the population size and the infection rate (25-70%)
  * 
- * In plain language, what our model does:
+ * In plain language, what our model does: This model shows the affect of ebola throughout a population it shows the incubation rate the death and recovery rate and the infection rate of the illness over a population
  * 
  */
 

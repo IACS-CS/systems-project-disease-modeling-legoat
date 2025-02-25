@@ -27,13 +27,17 @@ const renderPatients = (population) => {
 
   function renderEmoji(p) {
     if (p.newlyInfected) {
-      return "🤧"; // Sneezing Face for new cases
+      return "🤧"; // Sneezing Face for first turn of infection
     } else if (p.infected) {
-      return "🤢"; // Vomiting Face for already sick
+      return "🤢"; // Vomiting Face for already sick people
+    } else if (p.immune) {
+      return "🤩"; // Starry Eyes for immune people
     } else {
       return "😀"; // Healthy person
     }
   }
+  
+  
 
   function renderSubsetWarning() {
     if (amRenderingSubset) {
