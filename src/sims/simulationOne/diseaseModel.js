@@ -19,20 +19,20 @@ and not interacting with others in each round.
 */
 
 /**
- * Authors: 
+ * Authors: ryan dean
  * 
- * What we are simulating:
+ * What we are simulating: an ilness that is spread between people by shaking hands
  * 
- * What elements we have to add:
+ * What elements we have to add: a recovery period of 5 days
  * 
  * In plain language, what our model does:
- * 
+ * This model shows how an infection will spread between people by shaking hands and it shows how it spreads with a revoery period of 5 days.
  */
 
 
 
 export const defaultSimulationParameters = {
-  infectionChance: 50,
+  infectionChance: 25,
   // Add any new parameters you want here with their initial values
   //  -- you will also have to add inputs into your jsx file if you want
   // your user to be able to change these parameters.
@@ -65,7 +65,7 @@ export const createPopulation = (size = 1600) => {
   return population;
 };
 
-// Example: Maybe infect a person (students should customize this)
+// the first infected person has a 25% chance to infect the next person
 const updateIndividual = (person, contact, params) => {
   // Add some logic to update the individual!
   // For example...
@@ -84,10 +84,11 @@ const updateIndividual = (person, contact, params) => {
   }
 };
 
-// Example: Update population (students decide what happens each turn)
+// Example: Update population every turn the infected person has a 25% chance to infect someone else once someone is infected they are infected for 5 days and then become better again. they cant get it again because they become immune
 export const updatePopulation = (population, params) => {
   // Include "shufflePopulation if you want to shuffle...
   // population = shufflePopulation(population);
+  population = shufflePopulation(population)
   // Example logic... each person is in contact with the person next to them...
   for (let i = 0; i < population.length; i++) {
     let p = population[i];
@@ -101,7 +102,7 @@ export const updatePopulation = (population, params) => {
 };
 
 
-// Stats to track (students can add more)
+// Stats to track (students can add more) add amount of people who have recovered
 // Any stats you add here should be computed
 // by Compute Stats below
 export const trackedStats = [
