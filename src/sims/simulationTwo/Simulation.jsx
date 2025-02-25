@@ -27,6 +27,10 @@ const renderPatients = (population) => {
       return "🤧"; // Sneezing Face for new cases
     } else if (p.infected) {
       return "🤢"; // Vomiting Face for already sick
+    } else if (p.recovered) {
+      return "🤩"; // Starry-Eyed Face for recovered
+    } else if (p.dead) {
+      return "💀"; // Skull for dead
     } else {
       return "😀"; // Healthy person
     }
@@ -36,8 +40,7 @@ const renderPatients = (population) => {
     if (amRenderingSubset) {
       return (
         <div className="subset-warning">
-          Only showing {maxSize} ({((maxSize * 100) / popSize).toFixed(2)}%) of{" "}
-          {popSize} patients...
+          Only showing {maxSize} ({((maxSize * 100) / popSize).toFixed(2)}%) of {popSize} patients...
         </div>
       );
     }
@@ -54,9 +57,7 @@ const renderPatients = (population) => {
           data-patient-y={p.y}
           className="patient"
           style={{
-            transform: `translate(${(p.x / 100) * boxSize}px, ${
-              (p.y / 100) * boxSize
-            }px)`,
+            transform: `translate(${(p.x / 100) * boxSize}px, ${(p.y / 100) * boxSize}px)`,
           }}
         >
           {renderEmoji(p)}
@@ -68,15 +69,11 @@ const renderPatients = (population) => {
 
 const Simulation = () => {
   const [popSize, setPopSize] = useState(20);
-  const [population, setPopulation] = useState(
-    createPopulation(popSize * popSize)
-  );
+  const [population, setPopulation] = useState(createPopulation(popSize * popSize));
   const [diseaseData, setDiseaseData] = useState([]);
   const [lineToGraph, setLineToGraph] = useState("infected");
   const [autoMode, setAutoMode] = useState(false);
-  const [simulationParameters, setSimulationParameters] = useState(
-    defaultSimulationParameters
-  );
+  const [simulationParameters, setSimulationParameters] = useState(defaultSimulationParameters);
 
   // Runs a single simulation step
   const runTurn = () => {
@@ -102,16 +99,13 @@ const Simulation = () => {
   return (
     <div>
       <section className="top">
-        <h1>My Second Custom Simulation</h1>
+        <h1>Ebola Simulation</h1>
         <p>
-          Edit <code>simulationTwo/diseaseModel.js</code> to define how your
-          simulation works. This one should try to replicate features of a real
-          world illness and/or intervention.
+          Edit <code>simulationTwo/diseaseModel.js</code> to define how your simulation works. This one should try to replicate features of a real world illness and/or intervention.
         </p>
 
         <p>
-          Population: {population.length}. Infected:{" "}
-          {population.filter((p) => p.infected).length}
+          Population: {population.length}. Infected: {population.filter((p) => p.infected).length}
         </p>
 
         <button onClick={runTurn}>Next Turn</button>
@@ -124,8 +118,7 @@ const Simulation = () => {
           <label>
             Population:
             <div className="vertical-stack">
-              {/* Population uses a "square" size to allow a UI that makes it easy to slide
-          from a small population to a large one. */}
+              {/* Population uses a "square" size to allow a UI that makes it easy to slide from a small population to a large one. */}
               <input
                 type="range"
                 min="3"
@@ -137,9 +130,7 @@ const Simulation = () => {
                 type="number"
                 value={Math.round(popSize * popSize)}
                 step="10"
-                onChange={(e) =>
-                  setPopSize(Math.sqrt(parseInt(e.target.value)))
-                }
+                onChange={(e) => setPopSize(Math.sqrt(parseInt(e.target.value)))}
               />
             </div>
           </label>
@@ -150,10 +141,7 @@ const Simulation = () => {
         {renderChart(diseaseData, lineToGraph, setLineToGraph, trackedStats)}
 
         <div className="world">
-          <div
-            className="population-box"
-            style={{ width: boxSize, height: boxSize }}
-          >
+          <div className="population-box" style={{ width: boxSize, height: boxSize }}>
             {renderPatients(population)}
           </div>
         </div>

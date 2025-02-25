@@ -1,5 +1,3 @@
-import { shufflePopulation } from "../../lib/shufflePopulation";
-
 /* Update this code to simulate a simple disease model! */
 
 /* For this simulation, you should model a *real world disease* based on some real information about it.
@@ -41,67 +39,91 @@ import { shufflePopulation } from "../../lib/shufflePopulation";
  * 
  */
 
-
-// Default parameters -- any properties you add here
-// will be passed to your disease model when it runs.
+import { shufflePopulation } from "../../lib/shufflePopulation";
 
 export const defaultSimulationParameters = {
-  // Add any parameters you want here with their initial values
-  //  -- you will also have to add inputs into your jsx file if you want
-  // your user to be able to change these parameters.
+  infectionRate: 50, // Default infection rate (adjustable between 25-70%)
 };
 
-/* Creates your initial population. By default, we *only* track whether people
-are infected. Any other attributes you want to track would have to be added
-as properties on your initial individual. 
-
-For example, if you want to track a disease which lasts for a certain number
-of rounds (e.g. an incubation period or an infectious period), you would need
-to add a property such as daysInfected which tracks how long they've been infected.
-
-Similarily, if you wanted to track immunity, you would need a property that shows
-whether people are susceptible or immune (i.e. succeptibility or immunity) */
 export const createPopulation = (size = 1600) => {
   const population = [];
   const sideSize = Math.sqrt(size);
   for (let i = 0; i < size; i++) {
     population.push({
       id: i,
-      x: (100 * (i % sideSize)) / sideSize, // X-coordinate within 100 units
-      y: (100 * Math.floor(i / sideSize)) / sideSize, // Y-coordinate scaled similarly
+      x: (100 * (i % sideSize)) / sideSize,
+      y: (100 * Math.floor(i / sideSize)) / sideSize,
       infected: false,
+      newlyInfected: false,
+      daysInfected: 0,
+      recovered: false,
+      dead: false,
     });
   }
-  // Infect patient zero...
   let patientZero = population[Math.floor(Math.random() * size)];
   patientZero.infected = true;
+  patientZero.newlyInfected = true;
   return population;
 };
 
-
-
-// Example: Update population (students decide what happens each turn)
 export const updatePopulation = (population, params) => {
-  // Figure out your logic here...
-  return population;
-};
+  const infectionRate = Math.max(25, Math.min(70, params.infectionRate));
+  let newPopulation = population.map((person) => {
+    if (person.newlyInfected) {
+      person.newlyInfected = false;
+    }
+    if (person.infected) {
+      person.daysInfected++;
+      if (person.daysInfected >= 9) {
+        if (Math.random() < 0.5) {
+          person.dead = true;
+          person.infected = false;
+        } else {
+          person.recovered = true;
+          person.infected = false;
+        }
+      }
+    }
+    return person;
+  });
 
-// Stats to track (students can add more)
-// Any stats you add here should be computed
-// by Compute Stats below
-export const trackedStats = [
-  { label: "Total Infected", value: "infected" },
-];
+  newPopulation = shufflePopulation(newPopulation);
 
-// Example: Compute stats (students customize)
-export const computeStatistics = (population, round) => {
-  let infected = 0;
-  for (let p of population) {
-    if (p.infected) {
-      infected += 1; // Count the infected
+  for (let i = 0; i < newPopulation.length; i += 2) {
+    if (i + 1 < newPopulation.length) {
+      let personA = newPopulation[i];
+      let personB = newPopulation[i + 1];
+      if (personA.infected && !personB.infected && !personB.dead) {
+        if (Math.random() < infectionRate / 100) {
+          personB.infected = true;
+          personB.newlyInfected = true;
+        }
+      } else if (personB.infected && !personA.infected && !personA.dead) {
+        if (Math.random() < infectionRate / 100) {
+          personA.infected = true;
+          personA.newlyInfected = true;
+        }
+      }
     }
   }
-  return { round, infected };
+
+  return newPopulation;
 };
 
+export const trackedStats = [
+  { label: "Total Infected", value: "infected" },
+  { label: "Total Recovered", value: "recovered" },
+  { label: "Total Dead", value: "dead" },
+];
 
+export const computeStatistics = (population, round) => {
+  let infected = 0;
+  let recovered = 0;
+  let dead = 0;
+  for (let p of population) {
+    if (p.infected) infected++;
+    if (p.recovered) recovered++;
+    if (p.dead) dead++;
+  }
+  return { round, infected, recovered, dead };
+};
