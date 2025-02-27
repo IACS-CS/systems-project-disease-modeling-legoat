@@ -101,7 +101,7 @@ const Simulation = () => {
       <section className="top">
         <h1>Ebola Simulation</h1>
         <p>
-          Edit <code>simulationTwo/diseaseModel.js</code> to define how your simulation works. This one should try to replicate features of a real world illness and/or intervention.
+          This simulation model shows the infection, death, immunization, and incubation rate of the Ebola virus. The model randomizes the pairs of people and who comes in contact with who to create a randomized spread of the infection.
         </p>
 
         <p>

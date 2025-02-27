@@ -111,9 +111,7 @@ const Simulation = () => {
       <section className="top">
         <h1>My Custom Simulation</h1>
         <p>
-          Edit <code>simulationOne/diseaseModel.js</code> to define how your
-          simulation works. This one should try to introduce *one* complicating
-          feature to the basic model.
+          In this simulation the models displays the infection and recovery rate of the "HandShake" disease. The sick faces are people with the illness the smile face is healthy people and the star face is people who have recovered and have become immmune.
         </p>
 
         <p>
