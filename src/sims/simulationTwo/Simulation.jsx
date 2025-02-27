@@ -12,9 +12,6 @@ import { renderTable } from "../../lib/renderTable";
 let boxSize = 500; // World box size in pixels
 let maxSize = 1000; // Max number of icons we render (we can simulate big populations, but don't render them all...)
 
-/**
- * Renders a subset of the population as a list of patients with emojis indicating their infection status.
- */
 const renderPatients = (population) => {
   let amRenderingSubset = population.length > maxSize;
   const popSize = population.length;
@@ -24,15 +21,15 @@ const renderPatients = (population) => {
 
   function renderEmoji(p) {
     if (p.newlyInfected) {
-      return "🤧"; // Sneezing Face for new cases
+      return "🤧";
     } else if (p.infected) {
-      return "🤢"; // Vomiting Face for already sick
+      return "🤢";
     } else if (p.recovered) {
-      return "🤩"; // Starry-Eyed Face for recovered
+      return "🤩";
     } else if (p.dead) {
-      return "💀"; // Skull for dead
+      return "💀";
     } else {
-      return "😀"; // Healthy person
+      return "😀";
     }
   }
 
@@ -69,13 +66,16 @@ const renderPatients = (population) => {
 
 const Simulation = () => {
   const [popSize, setPopSize] = useState(20);
+  const [incubationPeriod, setIncubationPeriod] = useState(9);
   const [population, setPopulation] = useState(createPopulation(popSize * popSize));
   const [diseaseData, setDiseaseData] = useState([]);
   const [lineToGraph, setLineToGraph] = useState("infected");
   const [autoMode, setAutoMode] = useState(false);
-  const [simulationParameters, setSimulationParameters] = useState(defaultSimulationParameters);
+  const [simulationParameters, setSimulationParameters] = useState({
+    ...defaultSimulationParameters,
+    incubationPeriod: 9,
+  });
 
-  // Runs a single simulation step
   const runTurn = () => {
     let newPopulation = updatePopulation([...population], simulationParameters);
     setPopulation(newPopulation);
@@ -83,13 +83,15 @@ const Simulation = () => {
     setDiseaseData([...diseaseData, newStats]);
   };
 
-  // Resets the simulation
   const resetSimulation = () => {
+    setSimulationParameters((prevParams) => ({
+      ...prevParams,
+      incubationPeriod: incubationPeriod,
+    }));
     setPopulation(createPopulation(popSize * popSize));
     setDiseaseData([]);
   };
 
-  // Auto-run simulation effect
   useEffect(() => {
     if (autoMode) {
       setTimeout(runTurn, 500);
@@ -114,11 +116,9 @@ const Simulation = () => {
         <button onClick={resetSimulation}>Reset Simulation</button>
 
         <div>
-          {/* Add custom parameters here... */}
           <label>
             Population:
             <div className="vertical-stack">
-              {/* Population uses a "square" size to allow a UI that makes it easy to slide from a small population to a large one. */}
               <input
                 type="range"
                 min="3"
@@ -135,17 +135,35 @@ const Simulation = () => {
             </div>
           </label>
         </div>
+        <div>
+          <label>
+            Incubation Period (Days):
+            <div className="vertical-stack">
+              <input
+                type="range"
+                min="2"
+                max="21"
+                value={incubationPeriod}
+                onChange={(e) => setIncubationPeriod(parseInt(e.target.value))}
+              />
+              <input
+                type="number"
+                value={incubationPeriod}
+                step="1"
+                onChange={(e) => setIncubationPeriod(parseInt(e.target.value))}
+              />
+            </div>
+          </label>
+        </div>
       </section>
 
       <section className="side-by-side">
         {renderChart(diseaseData, lineToGraph, setLineToGraph, trackedStats)}
-
         <div className="world">
           <div className="population-box" style={{ width: boxSize, height: boxSize }}>
             {renderPatients(population)}
           </div>
         </div>
-
         {renderTable(diseaseData, trackedStats)}
       </section>
     </div>
