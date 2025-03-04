@@ -74,7 +74,7 @@ export const updatePopulation = (population, params) => {
     }
     if (person.infected) {
       person.daysInfected++;
-      if (person.daysInfected >= 9) {
+      if (person.daysInfected >= params.incubationPeriod) {
         if (Math.random() < 0.5) {
           person.dead = true;
           person.infected = false;

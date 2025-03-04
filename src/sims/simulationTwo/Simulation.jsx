@@ -73,8 +73,16 @@ const Simulation = () => {
   const [autoMode, setAutoMode] = useState(false);
   const [simulationParameters, setSimulationParameters] = useState({
     ...defaultSimulationParameters,
-    incubationPeriod: 9,
+    incubationPeriod: 9, // Ensure incubation period is included
   });
+
+  // Ensure simulation parameters update when the incubation slider changes
+  useEffect(() => {
+    setSimulationParameters((prevParams) => ({
+      ...prevParams,
+      incubationPeriod: incubationPeriod,
+    }));
+  }, [incubationPeriod]);
 
   const runTurn = () => {
     let newPopulation = updatePopulation([...population], simulationParameters);
