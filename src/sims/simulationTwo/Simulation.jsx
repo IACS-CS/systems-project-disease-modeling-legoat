@@ -179,3 +179,4 @@ const Simulation = () => {
 };
 
 export default Simulation;
+//used ai for the slider and help adding emojis based on the states of the people.

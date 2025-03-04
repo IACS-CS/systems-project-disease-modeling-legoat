@@ -127,3 +127,4 @@ export const computeStatistics = (population, round) => {
   }
   return { round, infected, recovered, dead };
 };
+// used ai to help with person randomization and incubation rate and slider
